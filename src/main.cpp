@@ -25,11 +25,11 @@ void loop()
 {
   Serial.println("Sending to nrf24_server");
   // Send a message to nrf24_server
-  uint8_t data[] = "Hello World!";
+  uint8_t data[] = "FLAHFLAH";
   nrf24.send(data, sizeof(data));
   
   nrf24.waitPacketSent();
   
-  delay(400);
+  delay(200);
 }
 
