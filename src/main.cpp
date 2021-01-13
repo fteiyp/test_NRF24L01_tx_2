@@ -21,7 +21,6 @@ void setup()
     Serial.println("setRF failed");    
 }
 
-
 void loop()
 {
   Serial.println("Sending to nrf24_server");
