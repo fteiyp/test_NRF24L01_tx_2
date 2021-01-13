@@ -29,27 +29,7 @@ void loop()
   nrf24.send(data, sizeof(data));
   
   nrf24.waitPacketSent();
-  // Now wait for a reply
-  uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
-  uint8_t len = sizeof(buf);
-
-  if (nrf24.waitAvailableTimeout(500))
-  { 
-    // Should be a reply message for us now   
-    if (nrf24.recv(buf, &len))
-    {
-      Serial.print("got reply: ");
-      Serial.println((char*)buf);
-    }
-    else
-    {
-      Serial.println("recv failed");
-    }
-  }
-  else
-  {
-    Serial.println("No reply, is nrf24_server running?");
-  }
+  
   delay(400);
 }
 
