@@ -4,7 +4,8 @@
 #include <RH_NRF24.h>
 
 // data transfer array
-uint8_t flexValues[6];
+uint16_t unmapppedValues[6]; // 2 bytes because 0 to 1055 analogRead
+uint8_t flexValues[6]; // 1 byte for mapped number
 
 // Singleton instance of the radio driver
 RH_NRF24 nrf24;
@@ -28,34 +29,35 @@ void setup()
 
 void loop()
 {
-  // Reading flex sensors
-  for (int i = 0; i < 4; i++) {
-    flexValues[i] = analogRead(i);
-  }
-  // Last 2 flex sensor values are on pins 6 and 7
-  flexValues[4] = analogRead(6);
-  flexValues[5] = analogRead(7);
+  // Reading flex sensors no loop because specific values 6 and 7
+  unmapppedValues[0] = analogRead(0);
+  unmapppedValues[1] = analogRead(1);
+  unmapppedValues[2] = analogRead(2);
+  unmapppedValues[3] = analogRead(3);
+  unmapppedValues[4] = analogRead(6);
+  unmapppedValues[5] = analogRead(7);
 
-  // Map all values to 0 to 255 range
-  for (int i = 0; i < 6; i++) {
-    flexValues[i] = map(flexValues[i], 0, 1023, 0, 255);
-  }
+  Serial.println("unmapped sensor values: ");
+  Serial.println(unmapppedValues[0]);
+  Serial.println(unmapppedValues[1]);
+  Serial.println(unmapppedValues[2]);
+  Serial.println(unmapppedValues[3]);
+  Serial.println(unmapppedValues[4]);
+  Serial.println(unmapppedValues[5]);
 
-  Serial.println("mapped sensor values: ");
-  Serial.println(flexValues[0]);
-  Serial.println(flexValues[1]);
-  Serial.println(flexValues[2]);
-  Serial.println(flexValues[3]);
-  Serial.println(flexValues[4]);
-  Serial.println(flexValues[5]);
+  /* Map all values to 0 to 180 servo range
+  Each flex sensor needs a specific mapping function because
+  they have different resistances */
+  flexValues[0] = map(unmapppedValues[0], 0, 1000, 0, 180);
+  flexValues[1] = map(unmapppedValues[1], 0, 1000, 0, 180);
+  flexValues[2] = map(unmapppedValues[2], 0, 1000, 0, 180);
+  flexValues[3] = map(unmapppedValues[3], 0, 1000, 0, 180);
+  flexValues[4] = map(unmapppedValues[4], 0, 1000, 0, 180);
+  flexValues[5] = map(unmapppedValues[5], 0, 1000, 0, 180);
 
   Serial.println("Sending to nrf24_server");
-  // Send a message to nrf24_server
-  // uint8_t data[] = "FLAHFLAH";
-  // nrf24.send(data, sizeof(data));
+  // Send flexValues to nrf24_server
   nrf24.send(flexValues, sizeof(flexValues));
-
-  
   nrf24.waitPacketSent();
   
   delay(400);
