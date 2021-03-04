@@ -48,18 +48,18 @@ void loop()
   /* Map all values to 0 to 180 servo range
   Each flex sensor needs a specific mapping function because
   they have different resistances */
-  flexValues[0] = map(unmapppedValues[0], 0, 1000, 0, 180);
-  flexValues[1] = map(unmapppedValues[1], 0, 1000, 0, 180);
-  flexValues[2] = map(unmapppedValues[2], 0, 1000, 0, 180);
-  flexValues[3] = map(unmapppedValues[3], 0, 1000, 0, 180);
-  flexValues[4] = map(unmapppedValues[4], 0, 1000, 0, 180);
-  flexValues[5] = map(unmapppedValues[5], 0, 1000, 0, 180);
+  flexValues[0] = map(unmapppedValues[0], 760, 1000, 0, 180);
+  flexValues[1] = map(unmapppedValues[1], 700, 980, 0, 180);
+  flexValues[2] = map(unmapppedValues[2], 770, 1000, 0, 180);
+  flexValues[3] = map(unmapppedValues[3], 860, 1000, 0, 180);
+  flexValues[4] = map(unmapppedValues[4], 700, 1000, 0, 180);
+  flexValues[5] = map(unmapppedValues[5], 700, 1000, 0, 180);
 
   Serial.println("Sending to nrf24_server");
   // Send flexValues to nrf24_server
   nrf24.send(flexValues, sizeof(flexValues));
   nrf24.waitPacketSent();
   
-  delay(400);
+  delay(100);
 }
 
